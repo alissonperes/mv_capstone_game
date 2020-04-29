@@ -1,1 +1,1 @@
-# mv_capstone_game
+# Javascript capstone project: Build a game with Phaser
