@@ -2,6 +2,12 @@ import "phaser";
 import config from "../Config/config";
 import { Button } from "../Objects/Button";
 
+const get = () => JSON.parse(localStorage.getItem("Score"));
+const set = (value) => {
+  localStorage.setItem("Score", value);
+  return get();
+};
+
 export default class GameScene extends Phaser.Scene {
   constructor() {
     super("Game");
@@ -11,17 +17,19 @@ export default class GameScene extends Phaser.Scene {
     this.dragons;
     this.platforms;
     this.cursors;
-    this.score;
-    this.collectedStars;
-    this.gameOver;
     this.scoreText;
     this.highScoreText;
+    this.score;
+    this.gameRound;
+    this.gameOver;
+    this.highScore;
   }
 
   create() {
     this.score = 0;
-    this.collectedStars = 0;
+    this.gameRound = 1;
     this.gameOver = false;
+    console.log(this.sys.game.globals.highScore);
     this.highScore = this.sys.game.globals.highScore;
 
     this.add.image(400, 300, "sky");
@@ -135,12 +143,11 @@ export default class GameScene extends Phaser.Scene {
     }
 
     if (this.cursors.left.isDown) {
-      this.player.setVelocityX(-190);
+      this.player.setVelocityX(-190 - this.gameRound * 10);
 
       this.player.anims.play("left", true);
     } else if (this.cursors.right.isDown) {
-      this.player.setVelocityX(190);
-
+      this.player.setVelocityX(190 + this.gameRound * 10);
       this.player.anims.play("right", true);
     } else {
       this.player.setVelocityX(0);
@@ -172,10 +179,11 @@ export default class GameScene extends Phaser.Scene {
 
     if (this.score > this.highScore) {
       this.sys.game.globals.highScore = this.score;
+      set(this.score);
     }
 
     if (this.stars.countActive(true) === 0) {
-      this.collectedStars += 1;
+      this.gameRound += 1;
       this.stars.children.iterate(function (child) {
         child.enableBody(true, child.x, 0, true, true);
       });
@@ -190,11 +198,11 @@ export default class GameScene extends Phaser.Scene {
       dragon.setCollideWorldBounds(true);
       dragon.setVelocity(Phaser.Math.Between(-200, 200), 20);
       dragon.allowGravity = false;
-      if (this.collectedStars % 2 === 0) {
+      if (this.gameRound % 2 !== 0) {
         var bomb = this.bombs.create(x, 16, "bomb");
         bomb.setBounce(1);
         bomb.setCollideWorldBounds(true);
-        bomb.setVelocity(Phaser.Math.Between(-200, 200), 20);
+        bomb.setVelocity(Phaser.Math.Between(-50, 50), 20);
         bomb.allowGravity = false;
       }
     }
@@ -204,6 +212,10 @@ export default class GameScene extends Phaser.Scene {
     this.physics.pause();
     this.player.setTint(0xff0000);
     this.player.anims.play("turn");
+    if (this.score > this.highScore) {
+      this.sys.game.globals.highScore = this.score;
+      set(this.score);
+    }
 
     this.gameOver = true;
     // this.scene.start("Title");
@@ -219,9 +231,10 @@ export default class GameScene extends Phaser.Scene {
   }
 
   takePoints(player, dragon) {
-    dragon.destroy();
+    dragon.disableBody(true, true);
+    this.bombs.setVelocity(this.gameRound * 50, this.gameRound * 150);
 
-    this.score = Math.floor(this.score / 2);
+    this.score -= 60;
     this.scoreText.setText("Score: " + this.score);
   }
 }

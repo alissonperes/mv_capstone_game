@@ -8,6 +8,13 @@ import OptionsScene from "./Scenes/OptionsScene";
 import CreditsScene from "./Scenes/CreditsScene";
 import Model from "./Model";
 
+const get = () => JSON.parse(localStorage.getItem("Score"));
+const set = (value) => {
+  localStorage.setItem("Score", value);
+  return get();
+};
+get() || set(0);
+
 class Game extends Phaser.Game {
   constructor() {
     super(config);
@@ -18,7 +25,7 @@ class Game extends Phaser.Game {
       jumpSound: null,
       downSound: null,
       catchStar: null,
-      highScore: 0,
+      highScore: get(),
     };
     this.scene.add("Boot", BootScene);
     this.scene.add("Preloader", PreloaderScene);
@@ -29,5 +36,4 @@ class Game extends Phaser.Game {
     this.scene.start("Boot");
   }
 }
-
 window.game = new Game();
