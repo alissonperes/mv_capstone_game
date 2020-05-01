@@ -1,6 +1,7 @@
 import "phaser";
 import config from "../Config/config";
 import { Button } from "../Objects/Button";
+import { saveScore } from "../../src/api";
 
 const get = () => JSON.parse(localStorage.getItem("Score"));
 const set = (value) => {
@@ -13,6 +14,9 @@ export default class GameScene extends Phaser.Scene {
     super("Game");
     this.player;
     this.stars;
+    this.blueCrystals;
+    this.pinkCrystals;
+    this.yellowCrystals;
     this.bombs;
     this.dragons;
     this.platforms;
@@ -23,14 +27,18 @@ export default class GameScene extends Phaser.Scene {
     this.gameRound;
     this.gameOver;
     this.highScore;
+    this.playerName;
+    this.soundOn;
   }
 
   create() {
     this.score = 0;
     this.gameRound = 1;
     this.gameOver = false;
-    console.log(this.sys.game.globals.highScore);
+    this.soundOn = this.sys.game.globals.model.soundOn;
+
     this.highScore = this.sys.game.globals.highScore;
+    this.playerName = this.sys.game.globals.playerName;
 
     this.add.image(400, 300, "sky");
     this.platforms = this.physics.add.staticGroup();
@@ -76,19 +84,24 @@ export default class GameScene extends Phaser.Scene {
     this.downSound = this.sys.game.globals.downSound;
     this.catchStar = this.sys.game.globals.catchStar;
 
-    this.stars = this.physics.add.group({
-      key: "star",
-      repeat: 11,
-      setXY: { x: 12, y: 0, stepX: 70 },
+    this.blueCrystals = this.physics.add.group({
+      key: "blueCrystal",
+      repeat: 2,
+      setXY: { x: 12, y: 0, stepX: 266 },
     });
 
-    this.stars.children.iterate(function (child) {
+    this.blueCrystals.children.iterate(function (child) {
       //  Give each star a slightly different bounce
-      child.setBounceY(Phaser.Math.FloatBetween(0.4, 0.8));
+      child.setBounce(1);
+      child.setCollideWorldBounds(true);
+      child.setVelocity(Phaser.Math.Between(-200, 200), 20);
+      child.allowGravity = false;
     });
 
     this.bombs = this.physics.add.group();
     this.dragons = this.physics.add.group();
+    this.pinkCrystals = this.physics.add.group();
+    this.yellowCrystals = this.physics.add.group();
 
     //  The score
     this.scoreText = this.add.text(16, 16, "Score: 0", {
@@ -107,15 +120,35 @@ export default class GameScene extends Phaser.Scene {
     );
 
     this.physics.add.collider(this.player, this.platforms);
-    this.physics.add.collider(this.stars, this.platforms);
+    // this.physics.add.collider(this.stars, this.platforms);
+    this.physics.add.collider(this.blueCrystals, this.platforms);
     this.physics.add.collider(this.bombs, this.platforms);
     this.physics.add.collider(this.dragons, this.platforms);
+    this.physics.add.collider(this.pinkCrystals, this.platforms);
+    this.physics.add.collider(this.yellowCrystals, this.platforms);
+    this.physics.add.collider(this.bombs, this.dragons);
+    this.physics.add.collider(this.bombs);
 
-    //  Checks to see if the player overlaps with any of the stars, if he does call the collectStar function
     this.physics.add.overlap(
       this.player,
-      this.stars,
-      this.collectStar,
+      this.blueCrystals,
+      this.collectCrystals,
+      null,
+      this
+    );
+
+    this.physics.add.overlap(
+      this.player,
+      this.pinkCrystals,
+      this.specialCrystals,
+      null,
+      this
+    );
+
+    this.physics.add.overlap(
+      this.player,
+      this.yellowCrystals,
+      this.specialCrystals,
       null,
       this
     );
@@ -169,12 +202,12 @@ export default class GameScene extends Phaser.Scene {
     }
   }
 
-  collectStar(player, star) {
-    star.disableBody(true, true);
+  collectCrystals(player, crystal) {
+    crystal.disableBody(true, true);
 
     this.catchStar.play();
-    //  Add and update the score
-    this.score += 10;
+
+    this.score += 20;
     this.scoreText.setText("Score: " + this.score);
 
     if (this.score > this.highScore) {
@@ -182,28 +215,47 @@ export default class GameScene extends Phaser.Scene {
       set(this.score);
     }
 
-    if (this.stars.countActive(true) === 0) {
+    if (this.blueCrystals.countActive(true) === 0) {
       this.gameRound += 1;
-      this.stars.children.iterate(function (child) {
-        child.enableBody(true, child.x, 0, true, true);
+      this.blueCrystals.children.iterate(function (child) {
+        child.enableBody(true, child.x, 100, true, true);
+        child.setBounce(1);
+        child.setCollideWorldBounds(true);
+        child.setVelocity(Phaser.Math.Between(-200, 200), 20);
+        child.allowGravity = false;
       });
 
-      var x =
+      let x =
         this.player.x < 400
           ? Phaser.Math.Between(400, 800)
           : Phaser.Math.Between(0, 400);
 
-      var dragon = this.dragons.create(x, 16, "dragonblue");
+      let dragon = this.dragons.create(x, 16, "dragonblue");
       dragon.setBounce(1);
       dragon.setCollideWorldBounds(true);
       dragon.setVelocity(Phaser.Math.Between(-200, 200), 20);
       dragon.allowGravity = false;
-      if (this.gameRound % 2 !== 0) {
-        var bomb = this.bombs.create(x, 16, "bomb");
+
+      if (this.gameRound % 2 === 0) {
+        let yellowCrystal = this.yellowCrystals.create(x, 16, "yellowCrystal");
+        yellowCrystal.setBounce(1);
+        yellowCrystal.setCollideWorldBounds(true);
+        yellowCrystal.setVelocity(Phaser.Math.Between(-200, 200), 20);
+        yellowCrystal.allowGravity = false;
+
+        let bomb = this.bombs.create(x, 16, "bomb");
         bomb.setBounce(1);
         bomb.setCollideWorldBounds(true);
-        bomb.setVelocity(Phaser.Math.Between(-50, 50), 20);
+        bomb.setVelocity(Phaser.Math.Between(-25, 25), 20);
         bomb.allowGravity = false;
+      }
+
+      if (this.gameRound % 5 === 0) {
+        let pinkCrystal = this.pinkCrystals.create(x, 16, "pinkCrystal");
+        pinkCrystal.setBounce(1);
+        pinkCrystal.setCollideWorldBounds(true);
+        pinkCrystal.setVelocity(Phaser.Math.Between(-200, 200), 20);
+        pinkCrystal.allowGravity = false;
       }
     }
   }
@@ -215,8 +267,8 @@ export default class GameScene extends Phaser.Scene {
     if (this.score > this.highScore) {
       this.sys.game.globals.highScore = this.score;
       set(this.score);
+      saveScore(this.playerName, this.score);
     }
-
     this.gameOver = true;
     // this.scene.start("Title");
     this.restartButton = new Button(
@@ -232,9 +284,17 @@ export default class GameScene extends Phaser.Scene {
 
   takePoints(player, dragon) {
     dragon.disableBody(true, true);
-    this.bombs.setVelocity(this.gameRound * 50, this.gameRound * 150);
+    this.score -= 50;
+    this.scoreText.setText("Score: " + this.score);
+  }
 
-    this.score -= 60;
+  specialCrystals(player, crystal) {
+    crystal.disableBody(true, true);
+    this.catchStar.play();
+    crystal.texture.key === "pinkCrystal"
+      ? (this.score += 100)
+      : (this.score += 40);
+
     this.scoreText.setText("Score: " + this.score);
   }
 }

@@ -93,13 +93,16 @@ export default class PreloaderScene extends Phaser.Scene {
     this.load.image("star", "assets/star.png");
     this.load.image("bomb", "assets/bomb.png");
     this.load.image("dragonblue", "assets/dragonblue.png");
+    this.load.image("blueCrystal", "assets/blueCrystal.png");
+    this.load.image("pinkCrystal", "assets/pinkCrystal.png");
+    this.load.image("yellowCrystal", "assets/yellowCrystal.png");
 
     this.load.spritesheet("dude", "assets/dude.png", {
       frameWidth: 32,
       frameHeight: 35,
     });
 
-    this.load.audio("bgMusic", ["assets/gameMusic.ogg"]);
+    this.load.audio("bgMusic", ["assets/gameMusic.mp3"]);
     this.load.audio("jumpSound", ["assets/phaserUp4.mp3"]);
     this.load.audio("downSound", ["assets/phaserDown2.mp3"]);
     this.load.audio("catchStar", ["assets/catchStar.mp3"]);
