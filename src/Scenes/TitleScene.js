@@ -8,7 +8,6 @@ export default class TitleScene extends Phaser.Scene {
   }
 
   create() {
-    // Game
     this.gameButton = new Button(
       this,
       config.width / 2,
@@ -19,7 +18,6 @@ export default class TitleScene extends Phaser.Scene {
       "Game"
     );
 
-    // Options
     this.optionsButton = new Button(
       this,
       config.width / 2,
@@ -30,7 +28,6 @@ export default class TitleScene extends Phaser.Scene {
       "Options"
     );
 
-    // Credits
     this.creditsButton = new Button(
       this,
       config.width / 2,
@@ -42,12 +39,13 @@ export default class TitleScene extends Phaser.Scene {
     );
 
     this.model = this.sys.game.globals.model;
+    this.jumpSound = this.sound.add("jumpSound", { volume: 0.6 });
+    this.downSound = this.sound.add("downSound", { volume: 0.6 });
+    this.catchStar = this.sound.add("catchStar", { volume: 1 });
+    this.bombSound = this.sound.add("bombSound", { volume: 1 });
 
     if (this.model.musicOn === true && this.model.bgMusicPlaying === false) {
       this.bgMusic = this.sound.add("bgMusic", { volume: 0.05, loop: true });
-      this.jumpSound = this.sound.add("jumpSound", { volume: 0.6 });
-      this.downSound = this.sound.add("downSound", { volume: 0.6 });
-      this.catchStar = this.sound.add("catchStar", { volume: 1 });
 
       this.bgMusic.play();
       this.model.bgMusicPlaying = true;
@@ -55,6 +53,19 @@ export default class TitleScene extends Phaser.Scene {
       this.sys.game.globals.jumpSound = this.jumpSound;
       this.sys.game.globals.downSound = this.downSound;
       this.sys.game.globals.catchStar = this.catchStar;
+      this.sys.game.globals.bombSound = this.bombSound;
+    }
+
+    if (!this.model.soundOn) {
+      this.jumpSound.mute = true;
+      this.downSound.mute = true;
+      this.catchStar.mute = true;
+      this.bombSound.mute = true;
+    } else {
+      this.jumpSound.mute = false;
+      this.downSound.mute = false;
+      this.catchStar.mute = false;
+      this.bombSound.mute = false;
     }
   }
 

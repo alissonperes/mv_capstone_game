@@ -13,7 +13,6 @@ export default class GameScene extends Phaser.Scene {
   constructor() {
     super("Game");
     this.player;
-    this.stars;
     this.blueCrystals;
     this.pinkCrystals;
     this.yellowCrystals;
@@ -56,7 +55,7 @@ export default class GameScene extends Phaser.Scene {
     this.platforms.create(704, 314, "platforms");
     this.platforms.create(704, 164, "platforms");
 
-    this.player = this.physics.add.sprite(0, 0, "king");
+    this.player = this.physics.add.sprite(0, 0, "king").setScale(1.3);
 
     this.player.setBounce(0.2);
     this.player.setCollideWorldBounds(true);
@@ -86,6 +85,19 @@ export default class GameScene extends Phaser.Scene {
     this.jumpSound = this.sys.game.globals.jumpSound;
     this.downSound = this.sys.game.globals.downSound;
     this.catchStar = this.sys.game.globals.catchStar;
+    this.bombSound = this.sys.game.globals.bombSound;
+    this.soundOn = this.sys.game.globals.model.soundOn;
+    if (!this.soundOn) {
+      this.jumpSound.mute = true;
+      this.downSound.mute = true;
+      this.catchStar.mute = true;
+      this.bombSound.mute = true;
+    } else {
+      this.jumpSound.mute = false;
+      this.downSound.mute = false;
+      this.catchStar.mute = false;
+      this.bombSound.mute = false;
+    }
 
     this.blueCrystals = this.physics.add.group({
       key: "blueCrystal",
@@ -128,6 +140,12 @@ export default class GameScene extends Phaser.Scene {
     this.physics.add.collider(this.yellowCrystals, this.platforms);
     this.physics.add.collider(this.bombs, this.dragons);
     this.physics.add.collider(this.bombs);
+    this.physics.add.collider(this.blueCrystals);
+    this.physics.add.collider(this.pinkCrystals);
+    this.physics.add.collider(this.yellowCrystals);
+    this.physics.add.collider(this.blueCrystals, this.pinkCrystals);
+    this.physics.add.collider(this.blueCrystals, this.yellowCrystals);
+    this.physics.add.collider(this.pinkCrystals, this.yellowCrystals);
 
     this.physics.add.overlap(
       this.player,
@@ -170,7 +188,7 @@ export default class GameScene extends Phaser.Scene {
     );
   }
 
-  update() {
+  update(delta) {
     if (this.gameOver) {
       return;
     }
@@ -193,7 +211,9 @@ export default class GameScene extends Phaser.Scene {
     }
 
     if (this.cursors.space.isDown) {
-      this.player.anims.play("swoosh");
+      if (delta > 18) {
+        this.player.anims.play("swoosh");
+      }
     }
 
     if (this.cursors.up.isDown && this.player.body.touching.down) {
@@ -215,7 +235,7 @@ export default class GameScene extends Phaser.Scene {
 
     this.catchStar.play();
 
-    this.score += 20;
+    this.score += 40;
     this.scoreText.setText("Score: " + this.score);
 
     if (this.score > this.highScore) {
@@ -269,17 +289,18 @@ export default class GameScene extends Phaser.Scene {
   }
 
   hitBomb(player, bomb) {
-    console.log(this.player.anims.currentAnim.key == "swoosh");
     this.physics.pause();
     this.player.setTint(0xff0000);
+    this.bombSound.play();
     this.player.anims.play("turn");
+
     if (this.score > this.highScore) {
       this.sys.game.globals.highScore = this.score;
       set(this.score);
       saveScore(this.playerName, this.score);
     }
     this.gameOver = true;
-    // this.scene.start("Title");
+
     this.restartButton = new Button(
       this,
       config.width / 2,
@@ -289,13 +310,27 @@ export default class GameScene extends Phaser.Scene {
       "Restart",
       "Game"
     );
+
+    this.restartButton = new Button(
+      this,
+      config.width / 2,
+      config.height / 2 + 100,
+      "blueButton1",
+      "blueButton2",
+      "Menu",
+      "Title"
+    );
   }
 
   takePoints(player, dragon) {
     if (this.player.anims.currentAnim.key == "swoosh") {
       dragon.disableBody(true, true);
     } else {
-      dragon.x = 10;
+      let x =
+        this.player.x < 400
+          ? Phaser.Math.Between(400, 800)
+          : Phaser.Math.Between(0, 400);
+      dragon.x = x;
       this.score -= 50;
       this.scoreText.setText("Score: " + this.score);
     }
@@ -306,7 +341,7 @@ export default class GameScene extends Phaser.Scene {
     this.catchStar.play();
     crystal.texture.key === "pinkCrystal"
       ? (this.score += 100)
-      : (this.score += 40);
+      : (this.score += 60);
 
     this.scoreText.setText("Score: " + this.score);
   }

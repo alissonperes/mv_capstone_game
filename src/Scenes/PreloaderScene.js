@@ -10,10 +10,8 @@ export default class PreloaderScene extends Phaser.Scene {
   }
 
   preload() {
-    // add logo image
     this.add.image(400, 200, "logo");
 
-    // display progress bar
     var progressBar = this.add.graphics();
     var progressBox = this.add.graphics();
     progressBox.fillStyle(0x222222, 0.8);
@@ -54,7 +52,6 @@ export default class PreloaderScene extends Phaser.Scene {
     });
     assetText.setOrigin(0.5, 0.5);
 
-    // update progress bar
     this.load.on("progress", function(value) {
       percentText.setText(parseInt(value * 100) + "%");
       progressBar.clear();
@@ -62,12 +59,10 @@ export default class PreloaderScene extends Phaser.Scene {
       progressBar.fillRect(250, 280, 300 * value, 30);
     });
 
-    // update file progress text
     this.load.on("fileprogress", function(file) {
       assetText.setText("Loading asset: " + file.key);
     });
 
-    // remove progress bar when complete
     this.load.on(
       "complete",
       function() {
@@ -82,14 +77,12 @@ export default class PreloaderScene extends Phaser.Scene {
 
     this.timedEvent = this.time.delayedCall(3000, this.ready, [], this);
 
-    // load assets needed in our game
     this.load.image("blueButton1", "assets/ui/blue_button02.png");
     this.load.image("blueButton2", "assets/ui/blue_button03.png");
     this.load.image("phaserLogo", "assets/logo.png");
     this.load.image("box", "assets/ui/grey_box.png");
     this.load.image("checkedBox", "assets/ui/blue_boxCheckmark.png");
     this.load.image("sky", "assets/sky.png");
-    // this.load.image("ground", "assets/platform.png");
     this.load.image("star", "assets/star.png");
     this.load.image("bomb", "assets/bomb.png");
     this.load.image("dragonblue", "assets/dragonblue.png");
@@ -105,15 +98,11 @@ export default class PreloaderScene extends Phaser.Scene {
       frameHeight: 24
     });
 
-    // this.load.spritesheet("dude", "assets/dude.png", {
-    //   frameWidth: 32,
-    //   frameHeight: 35
-    // });
-
     this.load.audio("bgMusic", ["assets/gameMusic.mp3"]);
     this.load.audio("jumpSound", ["assets/phaserUp4.mp3"]);
     this.load.audio("downSound", ["assets/phaserDown2.mp3"]);
     this.load.audio("catchStar", ["assets/catchStar.mp3"]);
+    this.load.audio("bombSound", ["assets/8bit_bomb_explosion.wav"]);
   }
 
   ready() {

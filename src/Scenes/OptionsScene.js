@@ -21,7 +21,7 @@ export default class OptionsScene extends Phaser.Scene {
 
     this.musicButton.on(
       "pointerdown",
-      function () {
+      function() {
         this.model.musicOn = !this.model.musicOn;
         this.updateAudio();
       }.bind(this)
@@ -29,7 +29,7 @@ export default class OptionsScene extends Phaser.Scene {
 
     this.soundButton.on(
       "pointerdown",
-      function () {
+      function() {
         this.model.soundOn = !this.model.soundOn;
         this.updateAudio();
       }.bind(this)
@@ -63,8 +63,10 @@ export default class OptionsScene extends Phaser.Scene {
 
     if (this.model.soundOn === false) {
       this.soundButton.setTexture("box");
+      this.model.soundOn = false;
     } else {
       this.soundButton.setTexture("checkedBox");
+      this.model.soundOn = true;
     }
   }
 }

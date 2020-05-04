@@ -2,7 +2,7 @@ import Game from "./gameStart.js";
 import { callApi } from "./api";
 import { renderScores } from "./render";
 
-const get = (item) => localStorage.getItem(item);
+const get = item => localStorage.getItem(item);
 const set = (item, value) => {
   localStorage.setItem(item, value);
   return get();
@@ -10,18 +10,17 @@ const set = (item, value) => {
 
 let userInputDiv = document.getElementById("user-input");
 
-callApi().then((result) => renderScores(result.result, userInputDiv));
+callApi().then(result => renderScores(result.result, userInputDiv));
 
-const startGame = function () {
+const startGame = function() {
   window.game = new Game();
   userInputDiv.style.display = "none";
 };
 
-const formSubmit = function (form) {
+const formSubmit = function(form) {
   if (!form.checkValidity()) {
     form.reportValidity();
   } else {
-    // get("Player") || set("Player", )
     set("Player", form[0].value);
     set("Score", 0);
     form.style.display = "none";
@@ -31,7 +30,7 @@ const formSubmit = function (form) {
 
 let player = get("Player") || null;
 
-const loadForm = function () {
+const loadForm = function() {
   userInputDiv.innerHTML = `<form id="user-name">
     <label for="name">Name: </label>
     <input type="text" name="name" placeholder="Player Name" required />
@@ -40,12 +39,12 @@ const loadForm = function () {
 
   let form = document.getElementById("user-name");
 
-  form.addEventListener("submit", function () {
+  form.addEventListener("submit", function() {
     formSubmit(form);
   });
 
   let btnStart = document.getElementById("btn-start-game");
-  btnStart.addEventListener("click", function () {
+  btnStart.addEventListener("click", function() {
     formSubmit(form);
   });
 };
