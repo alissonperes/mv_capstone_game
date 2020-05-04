@@ -1,7 +1,7 @@
 async function callApi() {
   try {
     const response = await fetch(
-      'https://us-central1-js-capstone-backend.cloudfunctions.net/api/games/xMoa2Xows376PjOWmyai/scores',
+      'https://us-central1-js-capstone-backend.cloudfunctions.net/api/games/jzL3YG9B8dV7OaUNMdMt/scores',
       {
         method: 'GET',
       },
@@ -25,7 +25,7 @@ async function saveScore(playerName, playerScore) {
 
   try {
     const response = await fetch(
-      'https://us-central1-js-capstone-backend.cloudfunctions.net/api/games/xMoa2Xows376PjOWmyai/scores',
+      'https://us-central1-js-capstone-backend.cloudfunctions.net/api/games/jzL3YG9B8dV7OaUNMdMt/scores',
       {
         method: 'POST',
         headers: {
