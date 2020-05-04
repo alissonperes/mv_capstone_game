@@ -1,6 +1,6 @@
-import Game from "./gameStart.js";
-import { callApi } from "./api";
-import { renderScores } from "./render";
+import Game from './gameStart';
+import { callApi } from './api';
+import renderScores from './render';
 
 const get = item => localStorage.getItem(item);
 const set = (item, value) => {
@@ -8,43 +8,43 @@ const set = (item, value) => {
   return get();
 };
 
-let userInputDiv = document.getElementById("user-input");
+const userInputDiv = document.getElementById('user-input');
 
 callApi().then(result => renderScores(result.result, userInputDiv));
 
-const startGame = function() {
+const startGame = () => {
   window.game = new Game();
-  userInputDiv.style.display = "none";
+  userInputDiv.style.display = 'none';
 };
 
-const formSubmit = function(form) {
+const formSubmit = form => {
   if (!form.checkValidity()) {
     form.reportValidity();
   } else {
-    set("Player", form[0].value);
-    set("Score", 0);
-    form.style.display = "none";
+    set('Player', form[0].value);
+    set('Score', 0);
+    form.style.display = 'none';
     startGame();
   }
 };
 
-let player = get("Player") || null;
+const player = get('Player') || null;
 
-const loadForm = function() {
+const loadForm = () => {
   userInputDiv.innerHTML = `<form id="user-name">
     <label for="name">Name: </label>
     <input type="text" name="name" placeholder="Player Name" required />
     <button type="button" name="Start" id="btn-start-game">Start Game</button>
   </form>`;
 
-  let form = document.getElementById("user-name");
+  const form = document.getElementById('user-name');
 
-  form.addEventListener("submit", function() {
+  form.addEventListener('submit', () => {
     formSubmit(form);
   });
 
-  let btnStart = document.getElementById("btn-start-game");
-  btnStart.addEventListener("click", function() {
+  const btnStart = document.getElementById('btn-start-game');
+  btnStart.addEventListener('click', () => {
     formSubmit(form);
   });
 };
@@ -52,13 +52,13 @@ const loadForm = function() {
 if (!player) {
   loadForm();
 } else {
-  userInputDiv.innerHTML = `<h4>${get("Player")}</h4>
+  userInputDiv.innerHTML = `<h4>${get('Player')}</h4>
   <button id="btn-change-player" type="button" name="changePlayer">Change Player</button>
   <button id="btn-start-game" type="button" name="startGame">Start game</button>`;
 
-  let changePlayerBtn = document.getElementById("btn-change-player");
-  let startGameBtn = document.getElementById("btn-start-game");
+  const changePlayerBtn = document.getElementById('btn-change-player');
+  const startGameBtn = document.getElementById('btn-start-game');
 
-  startGameBtn.addEventListener("click", startGame);
-  changePlayerBtn.addEventListener("click", loadForm);
+  startGameBtn.addEventListener('click', startGame);
+  changePlayerBtn.addEventListener('click', loadForm);
 }
