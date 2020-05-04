@@ -32,6 +32,7 @@ The dependencies are in the package.json file, so it's possible to just run `npm
 ## Live Version
 
 - [Live version on my personal website](https://alissonperes.com/king_treasure)
+- [Live version on Githack](https://rawcdn.githack.com/alissonperes/mv_capstone_game/8fe21833a3441bb8cbeeaf826dba6ee86bca9546/index.html)
 
 ## Aknowldgments
 
