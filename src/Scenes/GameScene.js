@@ -4,7 +4,7 @@ import { Button } from "../Objects/Button";
 import { saveScore } from "../../src/api";
 
 const get = () => JSON.parse(localStorage.getItem("Score"));
-const set = (value) => {
+const set = value => {
   localStorage.setItem("Score", value);
   return get();
 };
@@ -43,38 +43,41 @@ export default class GameScene extends Phaser.Scene {
     this.add.image(400, 300, "sky");
     this.platforms = this.physics.add.staticGroup();
 
-    this.platforms.create(400, 568, "ground").setScale(2).refreshBody();
+    this.platforms.create(400, 580, "ground");
 
-    //  Now let's create some ledges
-    this.platforms.create(600, 390, "ground");
-    this.platforms.create(50, 240, "ground");
-    this.platforms.create(750, 240, "ground");
+    this.platforms.create(96, 464, "platforms");
+    this.platforms.create(96, 314, "platforms");
+    this.platforms.create(96, 164, "platforms");
 
-    // The player and its settings
-    this.player = this.physics.add.sprite(100, 450, "dude");
+    this.platforms.create(398, 389, "platforms");
+    this.platforms.create(398, 239, "platforms");
 
-    //  Player physics properties. Give the little guy a slight bounce.
+    this.platforms.create(704, 464, "platforms");
+    this.platforms.create(704, 314, "platforms");
+    this.platforms.create(704, 164, "platforms");
+
+    this.player = this.physics.add.sprite(0, 0, "king");
+
     this.player.setBounce(0.2);
     this.player.setCollideWorldBounds(true);
 
     this.anims.create({
-      key: "left",
-      frames: this.anims.generateFrameNumbers("dude", { start: 0, end: 3 }),
+      key: "run",
+      frames: this.anims.generateFrameNumbers("king", { start: 14, end: 17 }),
       frameRate: 10,
-      repeat: -1,
+      repeat: -1
     });
 
     this.anims.create({
       key: "turn",
-      frames: [{ key: "dude", frame: 4 }],
-      frameRate: 20,
+      frames: [{ key: "king", frame: 0 }],
+      frameRate: 10
     });
 
     this.anims.create({
-      key: "right",
-      frames: this.anims.generateFrameNumbers("dude", { start: 5, end: 8 }),
-      frameRate: 10,
-      repeat: -1,
+      key: "swoosh",
+      frames: this.anims.generateFrameNumbers("king", { start: 8, end: 12 }),
+      frameRate: 10
     });
 
     this.cursors = this.input.keyboard.createCursorKeys();
@@ -87,11 +90,10 @@ export default class GameScene extends Phaser.Scene {
     this.blueCrystals = this.physics.add.group({
       key: "blueCrystal",
       repeat: 2,
-      setXY: { x: 12, y: 0, stepX: 266 },
+      setXY: { x: 12, y: 0, stepX: 266 }
     });
 
-    this.blueCrystals.children.iterate(function (child) {
-      //  Give each star a slightly different bounce
+    this.blueCrystals.children.iterate(function(child) {
       child.setBounce(1);
       child.setCollideWorldBounds(true);
       child.setVelocity(Phaser.Math.Between(-200, 200), 20);
@@ -103,10 +105,9 @@ export default class GameScene extends Phaser.Scene {
     this.pinkCrystals = this.physics.add.group();
     this.yellowCrystals = this.physics.add.group();
 
-    //  The score
     this.scoreText = this.add.text(16, 16, "Score: 0", {
       fontSize: "32px",
-      fill: "#000",
+      fill: "#000"
     });
 
     this.highscoreText = this.add.text(
@@ -115,12 +116,11 @@ export default class GameScene extends Phaser.Scene {
       `High Score: ${this.highScore}`,
       {
         fontSize: "32px",
-        fill: "#000",
+        fill: "#000"
       }
     );
 
     this.physics.add.collider(this.player, this.platforms);
-    // this.physics.add.collider(this.stars, this.platforms);
     this.physics.add.collider(this.blueCrystals, this.platforms);
     this.physics.add.collider(this.bombs, this.platforms);
     this.physics.add.collider(this.dragons, this.platforms);
@@ -177,15 +177,23 @@ export default class GameScene extends Phaser.Scene {
 
     if (this.cursors.left.isDown) {
       this.player.setVelocityX(-190 - this.gameRound * 10);
-
-      this.player.anims.play("left", true);
+      if (this.player.anims.currentAnim.key !== "swoosh")
+        this.player.anims.play("run", true);
+      this.player.flipX = true;
     } else if (this.cursors.right.isDown) {
       this.player.setVelocityX(190 + this.gameRound * 10);
-      this.player.anims.play("right", true);
+      if (this.player.anims.currentAnim.key !== "swoosh")
+        this.player.anims.play("run", true);
+      this.player.flipX = false;
+    } else if (!this.player.anims.isPlaying) {
+      this.player.setVelocityX(0);
+      this.player.anims.play("turn", true);
     } else {
       this.player.setVelocityX(0);
+    }
 
-      this.player.anims.play("turn");
+    if (this.cursors.space.isDown) {
+      this.player.anims.play("swoosh");
     }
 
     if (this.cursors.up.isDown && this.player.body.touching.down) {
@@ -217,7 +225,7 @@ export default class GameScene extends Phaser.Scene {
 
     if (this.blueCrystals.countActive(true) === 0) {
       this.gameRound += 1;
-      this.blueCrystals.children.iterate(function (child) {
+      this.blueCrystals.children.iterate(function(child) {
         child.enableBody(true, child.x, 100, true, true);
         child.setBounce(1);
         child.setCollideWorldBounds(true);
@@ -261,6 +269,7 @@ export default class GameScene extends Phaser.Scene {
   }
 
   hitBomb(player, bomb) {
+    console.log(this.player.anims.currentAnim.key == "swoosh");
     this.physics.pause();
     this.player.setTint(0xff0000);
     this.player.anims.play("turn");
@@ -283,9 +292,13 @@ export default class GameScene extends Phaser.Scene {
   }
 
   takePoints(player, dragon) {
-    dragon.disableBody(true, true);
-    this.score -= 50;
-    this.scoreText.setText("Score: " + this.score);
+    if (this.player.anims.currentAnim.key == "swoosh") {
+      dragon.disableBody(true, true);
+    } else {
+      dragon.x = 10;
+      this.score -= 50;
+      this.scoreText.setText("Score: " + this.score);
+    }
   }
 
   specialCrystals(player, crystal) {

@@ -27,8 +27,8 @@ export default class PreloaderScene extends Phaser.Scene {
       text: "Loading...",
       style: {
         font: "20px monospace",
-        fill: "#ffffff",
-      },
+        fill: "#ffffff"
+      }
     });
     loadingText.setOrigin(0.5, 0.5);
 
@@ -38,8 +38,8 @@ export default class PreloaderScene extends Phaser.Scene {
       text: "0%",
       style: {
         font: "18px monospace",
-        fill: "#ffffff",
-      },
+        fill: "#ffffff"
+      }
     });
     percentText.setOrigin(0.5, 0.5);
 
@@ -49,13 +49,13 @@ export default class PreloaderScene extends Phaser.Scene {
       text: "",
       style: {
         font: "18px monospace",
-        fill: "#ffffff",
-      },
+        fill: "#ffffff"
+      }
     });
     assetText.setOrigin(0.5, 0.5);
 
     // update progress bar
-    this.load.on("progress", function (value) {
+    this.load.on("progress", function(value) {
       percentText.setText(parseInt(value * 100) + "%");
       progressBar.clear();
       progressBar.fillStyle(0xffffff, 1);
@@ -63,14 +63,14 @@ export default class PreloaderScene extends Phaser.Scene {
     });
 
     // update file progress text
-    this.load.on("fileprogress", function (file) {
+    this.load.on("fileprogress", function(file) {
       assetText.setText("Loading asset: " + file.key);
     });
 
     // remove progress bar when complete
     this.load.on(
       "complete",
-      function () {
+      function() {
         progressBar.destroy();
         progressBox.destroy();
         loadingText.destroy();
@@ -89,18 +89,26 @@ export default class PreloaderScene extends Phaser.Scene {
     this.load.image("box", "assets/ui/grey_box.png");
     this.load.image("checkedBox", "assets/ui/blue_boxCheckmark.png");
     this.load.image("sky", "assets/sky.png");
-    this.load.image("ground", "assets/platform.png");
+    // this.load.image("ground", "assets/platform.png");
     this.load.image("star", "assets/star.png");
     this.load.image("bomb", "assets/bomb.png");
     this.load.image("dragonblue", "assets/dragonblue.png");
     this.load.image("blueCrystal", "assets/blueCrystal.png");
     this.load.image("pinkCrystal", "assets/pinkCrystal.png");
     this.load.image("yellowCrystal", "assets/yellowCrystal.png");
+    this.load.image("background", "assets/background.png");
 
-    this.load.spritesheet("dude", "assets/dude.png", {
-      frameWidth: 32,
-      frameHeight: 35,
+    this.load.image("ground", "assets/ground.png");
+    this.load.image("platforms", "assets/platforms.png");
+    this.load.spritesheet("king", "assets/king.png", {
+      frameWidth: 17,
+      frameHeight: 24
     });
+
+    // this.load.spritesheet("dude", "assets/dude.png", {
+    //   frameWidth: 32,
+    //   frameHeight: 35
+    // });
 
     this.load.audio("bgMusic", ["assets/gameMusic.mp3"]);
     this.load.audio("jumpSound", ["assets/phaserUp4.mp3"]);
