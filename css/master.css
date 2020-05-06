@@ -2,6 +2,7 @@ html {
   padding: 0;
   margin: 0;
 }
+
 body{
   padding: 0;
   margin: 0;
@@ -15,7 +16,7 @@ body{
 }
 
 #user-input h4 {
-margin: 0;
+  margin: 0;
 }
 
 #user-name {
@@ -35,5 +36,6 @@ margin: 0;
 }
 #game-container {
   width: 80vw;
-  min-height: 90vh
+  min-height: 80vh;
+  max-height: 90vh;
 }

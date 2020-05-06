@@ -39,7 +39,7 @@ export default class GameScene extends Phaser.Scene {
     this.highScore = this.sys.game.globals.highScore;
     this.playerName = this.sys.game.globals.playerName;
 
-    this.add.image(400, 300, 'sky');
+    this.add.image(400, 300, 'background');
     this.platforms = this.physics.add.staticGroup();
 
     this.platforms.create(400, 580, 'ground');
@@ -102,7 +102,7 @@ export default class GameScene extends Phaser.Scene {
     this.blueCrystals = this.physics.add.group({
       key: 'blueCrystal',
       repeat: 2,
-      setXY: { x: 12, y: 0, stepX: 266 },
+      setXY: { x: 450, y: 0, stepX: 50 },
     });
 
     this.blueCrystals.children.iterate(child => {
@@ -131,6 +131,9 @@ export default class GameScene extends Phaser.Scene {
     this.physics.add.collider(this.blueCrystals, this.platforms);
     this.physics.add.collider(this.bombs, this.platforms);
     this.physics.add.collider(this.dragons, this.platforms);
+    this.physics.add.collider(this.dragons, this.blueCrystals);
+    this.physics.add.collider(this.dragons, this.pinkCrystals);
+    this.physics.add.collider(this.dragons, this.yellowCrystals);
     this.physics.add.collider(this.pinkCrystals, this.platforms);
     this.physics.add.collider(this.yellowCrystals, this.platforms);
     this.physics.add.collider(this.bombs, this.dragons);
@@ -206,17 +209,17 @@ export default class GameScene extends Phaser.Scene {
       set(this.score);
     }
 
+    const x = this.player.x < 400 ? Phaser.Math.Between(400, 800) : Phaser.Math.Between(0, 400);
+
     if (this.blueCrystals.countActive(true) === 0) {
       this.gameRound += 1;
       this.blueCrystals.children.iterate(child => {
-        child.enableBody(true, child.x, 100, true, true);
+        child.enableBody(true, x, 100, true, true);
         child.setBounce(1);
         child.setCollideWorldBounds(true);
         child.setVelocity(Phaser.Math.Between(-200, 200), 20);
         child.allowGravity = false;
       });
-
-      const x = this.player.x < 400 ? Phaser.Math.Between(400, 800) : Phaser.Math.Between(0, 400);
 
       const dragon = this.dragons.create(x, 16, 'dragonblue');
       dragon.setBounce(1);
