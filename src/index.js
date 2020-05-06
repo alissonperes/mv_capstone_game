@@ -10,11 +10,11 @@ const set = (item, value) => {
 
 const userInputDiv = document.getElementById('user-input');
 
-callApi().then(result => renderScores(result.result, userInputDiv));
+callApi().then(result => renderScores(result.result));
 
 const startGame = () => {
-  window.game = new Game();
   userInputDiv.style.display = 'none';
+  window.game = new Game();
 };
 
 const formSubmit = form => {

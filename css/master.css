@@ -1,0 +1,39 @@
+html {
+  padding: 0;
+  margin: 0;
+}
+body{
+  padding: 0;
+  margin: 0;
+}
+
+#user-input {
+  display: flex;
+  justify-content: center;
+  height: 3rem;
+  align-items: center;
+}
+
+#user-input h4 {
+margin: 0;
+}
+
+#user-name {
+  display: flex;
+  align-items: center;
+}
+
+.main-container {
+  display: flex;
+  justify-content: space-around;
+  margin-left: 20px;
+  margin-top: 35px;
+}
+
+#scoreboard {
+  width: 15vw;
+}
+#game-container {
+  width: 80vw;
+  min-height: 90vh
+}

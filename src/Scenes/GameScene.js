@@ -263,8 +263,8 @@ export default class GameScene extends Phaser.Scene {
 
     this.restartButton = new Button(
       this,
-      config.width / 2,
-      config.height / 2,
+      config.scale.width / 2,
+      config.scale.height / 2,
       'blueButton1',
       'blueButton2',
       'Restart',
@@ -273,8 +273,8 @@ export default class GameScene extends Phaser.Scene {
 
     this.restartButton = new Button(
       this,
-      config.width / 2,
-      config.height / 2 + 100,
+      config.scale.width / 2,
+      config.scale.height / 2 + 100,
       'blueButton1',
       'blueButton2',
       'Menu',
@@ -284,7 +284,7 @@ export default class GameScene extends Phaser.Scene {
 
   takePoints(player, dragon) {
     if (this.player.anims.currentAnim.key === 'swoosh') {
-      dragon.disableBody(true, true);
+      dragon.destroy();
     } else {
       const x = this.player.x < 400 ? Phaser.Math.Between(400, 800) : Phaser.Math.Between(0, 400);
       dragon.x = x;
@@ -294,7 +294,7 @@ export default class GameScene extends Phaser.Scene {
   }
 
   specialCrystals(player, crystal) {
-    crystal.disableBody(true, true);
+    crystal.destroy();
     this.catchStar.play();
     if (crystal.texture.key === 'pinkCrystal') {
       this.score += 100;

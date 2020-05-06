@@ -1,10 +1,12 @@
-export default function renderScores(scores, divRender) {
+const scoreBoardDiv = document.getElementById('scoreboard');
+
+export default function renderScores(scores) {
   scores.sort((a, b) => b.score - a.score);
 
   const filteredScores = scores.filter((v, i, a) => a.findIndex(t => t.user === v.user) === i);
 
   const newTable = document.createElement('table');
-  newTable.border = '4';
+  newTable.border = '7';
   const mainTr = document.createElement('tr');
   const nameTh = document.createElement('th');
   const scoreTh = document.createElement('th');
@@ -23,5 +25,5 @@ export default function renderScores(scores, divRender) {
     newTr.appendChild(scoreTd);
     newTable.appendChild(newTr);
   });
-  divRender.appendChild(newTable);
+  scoreBoardDiv.appendChild(newTable);
 }
