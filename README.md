@@ -53,10 +53,13 @@ Have fun playing. Any feedback will be appreciated.
 
 ## Live Version
 
-There are two live versions, on my personal website (hosted in the US) and on githack (not sure where they are hosted). You could try to play on either links, just be advised that the score is stored on local storage for the website you use to play, so if you change the page, your score could be reset, but the high score is still saved with an API.
+There are three live versions, on my personal website (hosted in the US), on githack (not sure where they are hosted) and Heroku. You could try to play on any of those links, just be advised that the in game score is stored on local storage for the website you use to play, so if you change the page, your score could be reset, but the high score is still saved with an API.
+
+The Heroku page is super slow, so I don't advise you to use it. It's just there to show off my skills :)
 
 - [Live version on my personal website](https://alissonperes.com/king_treasure)
 - [Live version on Githack](https://rawcdn.githack.com/alissonperes/mv_capstone_game/8fe21833a3441bb8cbeeaf826dba6ee86bca9546/index.html)
+- [Live version on Heroku](https://boiling-hollows-69294.herokuapp.com/)
 
 ## Aknowldgments
 
