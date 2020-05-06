@@ -6,7 +6,8 @@
   "scripts": {
     "build": "webpack",
     "dev": "npm run build && webpack-dev-server --port=8000",
-    "test": "jest --watch -o"
+    "test": "jest --watch -o",
+    "start": "http-server"
   },
   "jest": {
     "moduleFileExtensions": [
