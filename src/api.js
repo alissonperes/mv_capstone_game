@@ -11,6 +11,7 @@ async function getScores(fetch) {
 
     if (response.ok) {
       const data = await response.json();
+      renderScores(data.result);
       return data;
     }
     return response;
@@ -40,7 +41,6 @@ async function saveScore(playerName, playerScore, fetch) {
     if (response.ok) {
       const data = await response.json();
       getScores(fetch).then(scores => renderScores(scores.result));
-      console.log(scores);
       return data;
     }
     return response;

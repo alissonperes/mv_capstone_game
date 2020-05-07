@@ -1,7 +1,8 @@
 import { getScores, saveScore } from '../src/api';
 
+let fakeFetchCall = false;
+
 it('getScores should return the scores from the Score API', () => {
-  let fakeFetchCall = false;
   const fakeFetch = url => {
     expect(url).toBe(
       'https://us-central1-js-capstone-backend.cloudfunctions.net/api/games/jzL3YG9B8dV7OaUNMdMt/scores',

@@ -1,6 +1,5 @@
 import Game from './gameStart';
 import { getScores } from './api';
-import renderScores from './render';
 
 const get = item => localStorage.getItem(item);
 const set = (item, value) => {
@@ -10,7 +9,7 @@ const set = (item, value) => {
 
 const userInputDiv = document.getElementById('user-input');
 
-getScores(fetch).then(result => renderScores(result.result));
+getScores(fetch);
 
 const startGame = () => {
   userInputDiv.style.display = 'none';
