@@ -1,4 +1,6 @@
-async function callApi() {
+import renderScores from './render';
+
+async function getScores(fetch) {
   try {
     const response = await fetch(
       'https://us-central1-js-capstone-backend.cloudfunctions.net/api/games/jzL3YG9B8dV7OaUNMdMt/scores',
@@ -17,7 +19,7 @@ async function callApi() {
   }
 }
 
-async function saveScore(playerName, playerScore) {
+async function saveScore(playerName, playerScore, fetch) {
   const sendData = {
     user: playerName,
     score: playerScore,
@@ -37,7 +39,8 @@ async function saveScore(playerName, playerScore) {
     );
     if (response.ok) {
       const data = await response.json();
-
+      getScores(fetch).then(scores => renderScores(scores.result));
+      console.log(scores);
       return data;
     }
     return response;
@@ -46,4 +49,4 @@ async function saveScore(playerName, playerScore) {
   }
 }
 
-export { callApi, saveScore };
+export { getScores, saveScore };

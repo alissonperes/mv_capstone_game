@@ -1,6 +1,5 @@
-const scoreBoardDiv = document.getElementById('scoreboard');
-
 export default function renderScores(scores) {
+  const scoreBoardDiv = document.getElementById('scoreboard');
   scores.sort((a, b) => b.score - a.score);
 
   const filteredScores = scores.filter((v, i, a) => a.findIndex(t => t.user === v.user) === i);
@@ -25,5 +24,6 @@ export default function renderScores(scores) {
     newTr.appendChild(scoreTd);
     newTable.appendChild(newTr);
   });
-  scoreBoardDiv.appendChild(newTable);
+
+  scoreBoardDiv.innerHTML = newTable.outerHTML;
 }
