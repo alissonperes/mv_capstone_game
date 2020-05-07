@@ -31,11 +31,12 @@ body{
   margin-top: 35px;
 }
 
-#scoreboard {
-  width: 15vw;
+td {
+  line-height: 2rem;
+  white-space: nowrap;
 }
+
 #game-container {
-  width: 80vw;
-  min-height: 80vh;
-  max-height: 90vh;
+  width: 800px;
+  height: 600px;
 }
