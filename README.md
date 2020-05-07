@@ -16,13 +16,7 @@ This project builds a browser game with Phaser 3.
 
 ## Getting started
 
-This game was built with the following npm and node versions:
-
-`$ npm -v
-6.14.4`
-
-`$ node -v
-v14.1.0`
+This game was built with npm version 6.14.4 and node 14.1.0
 
 To get started, clone or download this repo, run `npm install` to install all dependencies on the project folder.
 After installing all dependencies, you could run `npm run dev` to locally run the game, this should run a local server on port 8000 (http://127.0.0.1:8000/ or http://localhost:8000/)
