@@ -1,6 +1,10 @@
+const sortScores = scores => {
+  scores.sort((a, b) => b.score - a.score);
+};
+
 export default function renderScores(scores) {
   const scoreBoardDiv = document.getElementById('scoreboard');
-  scores.sort((a, b) => b.score - a.score);
+  sortScores(scores);
 
   const filteredScores = scores.filter((v, i, a) => a.findIndex(t => t.user === v.user) === i);
 
@@ -26,4 +30,5 @@ export default function renderScores(scores) {
   });
 
   scoreBoardDiv.innerHTML = newTable.outerHTML;
+  return scoreBoardDiv;
 }
