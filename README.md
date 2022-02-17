@@ -51,9 +51,7 @@ There are three live versions, on my personal website (hosted in the US), on git
 
 The Heroku page is super slow, so I don't advise you to use it. It's just there to show off my skills :)
 
-- [Live version on my personal website](https://alissonperes.com/king_treasure)
 - [Live version on Githack](https://rawcdn.githack.com/alissonperes/mv_capstone_game/8fe21833a3441bb8cbeeaf826dba6ee86bca9546/index.html)
-- [Live version on Heroku](https://boiling-hollows-69294.herokuapp.com/)
 
 ## Aknowldgments
 
