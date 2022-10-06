@@ -151,7 +151,7 @@ export default class GameScene extends Phaser.Scene {
 
     this.physics.add.overlap(this.player, this.yellowCrystals, this.specialCrystals, null, this);
 
-    this.physics.add.collider(this.player, this.bombs, this.hitBomb, null, this);
+    this.physics.add.overlap(this.player, this.bombs, this.hitBomb, null, this);
 
     this.physics.add.overlap(this.player, this.dragons, this.takePoints, null, this);
   }
@@ -201,7 +201,7 @@ export default class GameScene extends Phaser.Scene {
 
     this.catchStar.play();
 
-    this.score += 40;
+    this.score += 400;
     this.scoreText.setText(`Score: ${this.score}`);
 
     if (this.score > this.highScore) {
@@ -245,44 +245,48 @@ export default class GameScene extends Phaser.Scene {
         const pinkCrystal = this.pinkCrystals.create(x, 16, 'pinkCrystal');
         pinkCrystal.setBounce(1);
         pinkCrystal.setCollideWorldBounds(true);
-        pinkCrystal.setVelocity(Phaser.Math.Between(-200, 200), 20);
+        pinkCrystal.setVelocity(Phaser.Math.Between(-100, 800), 20);
         pinkCrystal.allowGravity = false;
       }
     }
   }
 
-  hitBomb(player) {
-    this.physics.pause();
-    player.setTint(0xff0000);
-    this.bombSound.play();
-    player.anims.play('turn');
+  hitBomb(player, bomb) {
+    if (this.player.anims.currentAnim.key === 'swoosh') {
+      bomb.destroy();
+    } else {
+      this.physics.pause();
+      player.setTint(0xff0000);
+      this.bombSound.play();
+      player.anims.play('turn');
 
-    if (this.score > this.highScore) {
-      this.sys.game.globals.highScore = this.score;
-      set(this.score);
-      saveScore(this.playerName, this.score, fetch);
+      if (this.score > this.highScore) {
+        this.sys.game.globals.highScore = this.score;
+        set(this.score);
+        saveScore(this.playerName, this.score, fetch);
+      }
+      this.gameOver = true;
+
+      this.restartButton = new Button(
+        this,
+        config.scale.width / 2,
+        config.scale.height / 2,
+        'blueButton1',
+        'blueButton2',
+        'Restart',
+        'Game',
+      );
+
+      this.restartButton = new Button(
+        this,
+        (config.scale.width / 2),
+        ((config.scale.height / 2) + 100),
+        'blueButton1',
+        'blueButton2',
+        'Menu',
+        'Title',
+      );
     }
-    this.gameOver = true;
-
-    this.restartButton = new Button(
-      this,
-      config.scale.width / 2,
-      config.scale.height / 2,
-      'blueButton1',
-      'blueButton2',
-      'Restart',
-      'Game',
-    );
-
-    this.restartButton = new Button(
-      this,
-      config.scale.width / 2,
-      config.scale.height / 2 + 100,
-      'blueButton1',
-      'blueButton2',
-      'Menu',
-      'Title',
-    );
   }
 
   takePoints(player, dragon) {
@@ -291,7 +295,7 @@ export default class GameScene extends Phaser.Scene {
     } else {
       const x = this.player.x < 400 ? Phaser.Math.Between(400, 800) : Phaser.Math.Between(0, 400);
       dragon.x = x;
-      this.score -= 50;
+      this.score -= 5;
       this.scoreText.setText(`Score: ${this.score}`);
     }
   }
@@ -300,9 +304,9 @@ export default class GameScene extends Phaser.Scene {
     crystal.destroy();
     this.catchStar.play();
     if (crystal.texture.key === 'pinkCrystal') {
-      this.score += 100;
+      this.score += 1000;
     } else {
-      this.score += 60;
+      this.score += 600;
     }
 
     this.scoreText.setText(`Score: ${this.score}`);
