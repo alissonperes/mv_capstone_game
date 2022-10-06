@@ -279,8 +279,8 @@ export default class GameScene extends Phaser.Scene {
 
       this.restartButton = new Button(
         this,
-        config.scale.width / 2,
-        config.scale.height / 2 + 100,
+        (config.scale.width / 2),
+        ((config.scale.height / 2) + 100),
         'blueButton1',
         'blueButton2',
         'Menu',
