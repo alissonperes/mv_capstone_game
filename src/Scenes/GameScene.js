@@ -254,19 +254,19 @@ export default class GameScene extends Phaser.Scene {
   hitBomb(player, bomb) {
     if (this.player.anims.currentAnim.key === 'swoosh') {
       bomb.destroy();
-    }else{
+    } else {
       this.physics.pause();
       player.setTint(0xff0000);
       this.bombSound.play();
       player.anims.play('turn');
-  
+
       if (this.score > this.highScore) {
         this.sys.game.globals.highScore = this.score;
         set(this.score);
         saveScore(this.playerName, this.score, fetch);
       }
       this.gameOver = true;
-  
+
       this.restartButton = new Button(
         this,
         config.scale.width / 2,
@@ -276,7 +276,7 @@ export default class GameScene extends Phaser.Scene {
         'Restart',
         'Game',
       );
-  
+
       this.restartButton = new Button(
         this,
         config.scale.width / 2,
