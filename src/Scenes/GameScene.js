@@ -186,6 +186,10 @@ export default class GameScene extends Phaser.Scene {
     if (this.cursors.space.isDown) {
       if (delta > 18) {
         this.player.anims.play('swoosh');
+        if (this.score >= 1000) {
+          this.score -= 200;
+          this.scoreText.setText(`Score: ${this.score}`);
+        }
       }
     }
 
