@@ -55,9 +55,9 @@ export default class GameScene extends Phaser.Scene {
     this.platforms.create(704, 314, 'platforms');
     this.platforms.create(704, 164, 'platforms');
 
-    this.player = this.physics.add.sprite(0, 0, 'king').setScale(1.3);
+    this.player = this.physics.add.sprite(0, 0, 'king').setScale(1.6);
 
-    this.player.setBounce(0.2);
+    this.player.setBounce(0.3);
     this.player.setCollideWorldBounds(true);
 
     this.anims.create({
@@ -80,6 +80,13 @@ export default class GameScene extends Phaser.Scene {
     });
 
     this.cursors = this.input.keyboard.createCursorKeys();
+    this.cursors.aKey = this.input.keyboard.addKey('A');
+    this.cursors.sKey = this.input.keyboard.addKey('S');
+    this.cursors.dKey = this.input.keyboard.addKey('D');
+    this.cursors.wKey = this.input.keyboard.addKey('W');
+    this.cursors.spaceKey = this.input.keyboard.addKey('SPACE');
+
+
     this.bgMusic = this.sys.game.globals.bgMusic;
 
     this.jumpSound = this.sys.game.globals.jumpSound;
@@ -161,11 +168,11 @@ export default class GameScene extends Phaser.Scene {
       return;
     }
 
-    if (this.cursors.left.isDown) {
+    if (this.cursors.left.isDown || this.cursors.aKey.isDown) {
       this.player.setVelocityX(-190 - this.gameRound * 10);
       if (this.player.anims.currentAnim.key !== 'swoosh') this.player.anims.play('run', true);
       this.player.flipX = true;
-    } else if (this.cursors.right.isDown) {
+    } else if (this.cursors.right.isDown || this.cursors.dKey.isDown) {
       this.player.setVelocityX(190 + this.gameRound * 10);
       if (this.player.anims.currentAnim.key !== 'swoosh') this.player.anims.play('run', true);
       this.player.flipX = false;
@@ -182,17 +189,17 @@ export default class GameScene extends Phaser.Scene {
       }
     }
 
-    if (this.cursors.up.isDown && this.player.body.touching.down) {
+    if ((this.cursors.up.isDown || this.cursors.wKey.isDown) && this.player.body.touching.down) {
       this.player.setVelocityY(-390);
       this.jumpSound.play();
     }
 
-    if (this.cursors.down.isDown && !this.player.body.touching.down) {
+    if ((this.cursors.down.isDown || this.cursors.sKey.isDown) && !this.player.body.touching.down) {
       if (!this.downSound.isPlaying) {
         this.downSound.play();
       }
       this.player.setVelocityY(390);
-      this.player.setBounceY(0.1);
+      this.player.setBounce(0.1);
     }
   }
 
